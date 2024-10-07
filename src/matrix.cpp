@@ -33,3 +33,19 @@ void Matrix::print() {
 }
 
 // Methods
+Vectors Matrix::dot(Vectors& vec) {
+    unsigned int dim = vec.getSize();
+    Vectors result(dim);
+    if (rows == dim) {
+        for (unsigned int i = 0; i < rows; i++) {
+            double sum{};
+            for (unsigned int j = 0; j < rows; j++) {
+                sum = sum + (vec.getDataAtIndex(j) * data[i*cols+j]);
+                result.setValueAtIndex(i, sum);
+            }
+        }
+    } else {
+
+    }
+    return  result;
+}
