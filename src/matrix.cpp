@@ -7,9 +7,37 @@ Matrix::Matrix(unsigned int& r, unsigned int& c) {
     data = new double [rows*cols]{};
 }
 
+Matrix::Matrix(const Matrix& other) {
+    rows = other.rows;
+    cols = other.cols;
+    data = new double [rows*cols]{};
+    for (unsigned int i = 0; i<rows; i++) {
+        for (unsigned int j = 0; j<cols; j++) {
+            data[i*cols+j] = other.data[i*cols+j];
+        }
+    }
+}
+
+Matrix& Matrix::operator=(const Matrix& other) {
+    if (this == &other) {
+        return *this;
+    }
+    delete [] data;
+    rows = other.rows;
+    cols = other.cols;
+    data = new double [rows*cols]{};
+    for (unsigned int i = 0; i<rows; i++) {
+        for (unsigned int j = 0; j<cols; j++) {
+            data[i*cols+j] = other.data[i*cols+j];
+        }
+    }
+    return *this;
+}
+
 Matrix::~Matrix() {
     delete [] data;
 }
+
 // Setters
 void Matrix::setValue(unsigned int i, unsigned int j, double value) {
     data[i*cols+j] = value;

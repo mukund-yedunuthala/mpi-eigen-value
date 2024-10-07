@@ -6,7 +6,8 @@ private:
 public:
     Vectors(unsigned int& s);
     ~Vectors();
-
+    Vectors(const Vectors& other);
+    Vectors& operator=(const Vectors& other);
     double getDataAtIndex(unsigned int i);
     int getSize();
 

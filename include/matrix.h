@@ -7,6 +7,8 @@ private:
 
 public:
     Matrix(unsigned int& r, unsigned int& c);
+    Matrix(const Matrix& other);
+    Matrix& operator=(const Matrix& other);
     ~Matrix();
 
     double getValue(unsigned int i, unsigned int j);

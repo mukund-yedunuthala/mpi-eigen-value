@@ -12,6 +12,28 @@ Vectors::~Vectors() {
     delete [] data;
 }
 
+// Copy
+Vectors::Vectors(const Vectors& other) {
+    size = other.size;
+    for (unsigned int i = 0; i < size; i++) {
+        data[i] = other.data[i];
+    }
+}
+
+// Copy assignment
+Vectors& Vectors::operator=(const Vectors& other){
+    if (this == &other) {
+        return  *this;
+    }
+    delete [] data;
+    size = other.size;
+    data = new double[size];
+    for (unsigned int i = 0; i < size; i++) {
+        data[i] = other.data[i];
+    }
+    return *this;
+}
+
 // Setters
 void Vectors::setData(double*& inputData) {
     for (unsigned int i = 0; i < size; i++) {
