@@ -8,6 +8,7 @@ public:
     ~Vectors();
     void setData(double*& inputData);
     double getDataAtIndex(unsigned int i);
+    void setValueAtIndex(unsigned int i, double value);
     double norm();
     void printVec();
 };

@@ -3,10 +3,7 @@
 #include <cmath>
 Vectors::Vectors(unsigned int& s) {
     size = s;
-    data = new double[s];
-    for (unsigned int i = 0; i < size; i++) {
-        data[i] = 0.0;
-    }
+    data = new double[s]{};
 }
 
 Vectors::~Vectors() {
@@ -29,6 +26,10 @@ double Vectors::norm() {
         norm = norm + (data[i] * data[i]) ;
     }
     return std::sqrt(norm);
+}
+
+void Vectors::setValueAtIndex(unsigned int i, double value) {
+    data[i] = value;
 }
 
 void Vectors::printVec() {
