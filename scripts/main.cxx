@@ -55,7 +55,6 @@ Vectors powerIterations(Matrix& P, unsigned int size, int max_it, double tol) {
         if (max_diff < tol) {
             break;
         }
-        rk1.print();
         rk = rk1;
     }
     return rk;
@@ -67,18 +66,17 @@ double computeEigenValue(Matrix& P, Vectors& r) {
     return lbda;
 }
 
-int main() {
-    unsigned int size {6};
-    int seed = 322;
-    double linkProbability = 0.5;
+int main(int argc, char **argv) {
+    unsigned int size {};
+    size = std::atoi(argv[1]);
+    int seed = 135356;
+    double linkProbability = 0.7;
     Matrix linkMatrix = genLinkMatrix(size, seed, linkProbability);
-    std::cout<<"Link Matrix:\n";
-    linkMatrix.print();
+    // std::cout<<"Link Matrix:\n"; linkMatrix.print();
     Matrix P = modifyLinkMatrix(size, linkMatrix);
-    std::cout<<"Modified Matrix:\n";
-    P.print();
+    // std::cout<<"Modified Matrix:\n"; P.print();
     Vectors r(size);
-    r = powerIterations(P, size, 30, 1e-7);
+    r = powerIterations(P, size, 100, 1e-10);
     double theta_k = computeEigenValue(P,r);
     std::cout<< "Eigen value:\t" << theta_k << "\n";
     return  0;
