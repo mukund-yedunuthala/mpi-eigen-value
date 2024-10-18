@@ -5,6 +5,8 @@ project(EVP
     )
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Update the submodules here
+include(cmake/updateSubmodules.cmake)
 # Testing
 add_subdirectory(${PROJECT_SOURCE_DIR}/external)
 include(CTest)
