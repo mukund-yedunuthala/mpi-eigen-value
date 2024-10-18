@@ -1,0 +1,7 @@
+if(BUILD_TESTING)
+    add_executable(testVectors testVectors.cxx)
+    target_link_libraries(testVectors PRIVATE GTest::gtest_main)
+    target_link_libraries(testVectors PRIVATE Linalg)
+    include(GoogleTest)
+    gtest_discover_tests(testVectors)
+endif(BUILD_TESTING)
