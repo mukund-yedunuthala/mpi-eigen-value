@@ -9,32 +9,63 @@
 Matrix genLinkMatrix(unsigned int& size, int& seed, double& linkProbability) {
     std::mt19937 generator(seed);
     std::bernoulli_distribution distribution(linkProbability);
+    // srand(seed);
     Matrix linkMatrix(size, size);
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
             // Generate a random 0 or 1 based on the link probability
             linkMatrix.setValue(i, j, distribution(generator));
+            // linkMatrix.setValue(i, j, rand() % 2);
+
         }
     }
     return linkMatrix;
 }
 
 Matrix modifyLinkMatrix(unsigned int size, Matrix& linkMatrix) {
-    Matrix modifiedLinkMatrix(size, size);
+    Matrix modifiedLinkMatrix(size, size); //P
+    Vectors nj (size);
     for (int i = 0; i < size; ++i) {
-        int sum = 0;
         for (int j = 0; j < size; ++j) {
-            sum = sum + linkMatrix.getValue(j,i);
+            double nji = nj.getDataAtIndex(i);
+            nji += linkMatrix.getValue(j,i);
+            nj.setValueAtIndex(i,nji);
         }
+    }
+    // Construct Q, d and e
+    Matrix Q = linkMatrix;
+    Vectors d (size);
+    Vectors e (size); e.setToValue(1.);
+    for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
-            if (sum != 0) {
-                modifiedLinkMatrix.setValue(j, i, linkMatrix.getValue(j, i)/sum);
+            if (nj.getDataAtIndex(j)>0) {
+                Q.setValue(i,j,(Q.getValue(i,j)/nj.getDataAtIndex(j)));
             }
-            else {
-                modifiedLinkMatrix.setValue(j,i,1.0/size);
+            else if (nj.getDataAtIndex(j)==0) {
+                d.setValueAtIndex(j, 1.);
             }
         }
     }
+    // std::cout<<"Normalized link Matrix:\n"; Q.print();
+    // std::cout<<"Dangling nodes:\n"; d.print();
+    // edT
+    Matrix edT (size, size);
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            edT.setValue(i,j,
+                (d.getDataAtIndex(j)*e.getDataAtIndex(i))/size
+            );
+        }
+    }
+    // adding up
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            modifiedLinkMatrix.setValue(i,j,
+                Q.getValue(i,j) + edT.getValue(i,j)
+            );
+        }
+    }
+    // std::cout<<"Left stochastic matrix P:\n";modifiedLinkMatrix.print();
     return modifiedLinkMatrix;
 }
 
@@ -70,17 +101,30 @@ double computeEigenValue(Matrix& P, Vectors& r) {
 int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
     unsigned int size {};
+    int rank{}, commSize {};
+    double start_time, end_time;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &commSize);
+    if (rank == 0) {start_time = MPI_Wtime();}
+    
     size = std::atoi(argv[1]);
-    int seed = 135356;
-    double linkProbability = 0.7;
+    int seed = 1;
+    double linkProbability = 0.4;
     Matrix linkMatrix = genLinkMatrix(size, seed, linkProbability);
     // std::cout<<"Link Matrix:\n"; linkMatrix.print();
     Matrix P = modifyLinkMatrix(size, linkMatrix);
-    // std::cout<<"Modified Matrix:\n"; P.print();
+    // // std::cout<<"Modified Matrix:\n"; P.print();
     Vectors r(size);
     r = powerIterations(P, size, 100, 1e-10);
+    // r.print();
     double theta_k = computeEigenValue(P,r);
     std::cout<< "Eigen value:\t" << theta_k << "\n";
+    if (rank == 0) {
+        end_time = MPI_Wtime();
+        std::cout << "Time elapsed: " << std::setprecision(5);
+        std::cout << end_time - start_time << "s\n";
+    }
+
     MPI_Finalize();
     return  0;
 }

@@ -7,6 +7,17 @@ For building parallel implementation only
 ```
 cmake -S . -B build -DWITH_MPI=1
 ```
+Following the invocation of cmake:
+```
+cd build
+make
+```
+### Run
+The size of the matrix needs to be specified as a commandline argument, e.g.
+
+```
+./EVP 10000
+```
 
 ### Testing
 ```
