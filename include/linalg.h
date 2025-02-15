@@ -8,14 +8,17 @@ public:
     ~Vectors();
     Vectors(const Vectors& other);
     Vectors& operator=(const Vectors& other);
+    
     double getDataAtIndex(unsigned int i);
     int getSize();
+    double* getData();
 
     void setData(double*& inputData);
     void setValueAtIndex(unsigned int i, double value);
     void setToValue(double value);
 
     double sum();
+    double abssum();
     double norm();
     double dot(Vectors& other);
     void print();

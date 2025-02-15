@@ -62,6 +62,10 @@ int Vectors::getSize() {
     return size;
 }
 
+double* Vectors::getData() {
+    return data;
+}
+
 // Methods
 double Vectors::sum() {
     double sum = 0.0;
@@ -70,6 +74,16 @@ double Vectors::sum() {
     }
     return sum;
 }
+
+double Vectors::abssum() {
+    double sum = 0.0;
+    for (unsigned int i = 0; i < size; i++) {
+        sum = sum + std::abs(data[i]);
+    }
+    return sum;
+}
+
+
 double Vectors::norm() {
     double norm = 0.0;
     for (unsigned int i = 0; i < size; i++) {
@@ -90,7 +104,7 @@ double Vectors::dot(Vectors& other) {
 
 void Vectors::print() {
     for (unsigned int i = 0; i < size; i++) {
-        std::cout << data[i] << " ";
+        std::cout << data[i] << "\t";
     }
     std::cout << "\n";
 }
