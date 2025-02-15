@@ -13,10 +13,14 @@ cd build
 make
 ```
 ### Run
-The size of the matrix needs to be specified as a commandline argument, e.g.
+The size of the matrix needs to be specified as a commandline argument, e.g. for sequential,
 
 ```
 ./EVP 10000
+```
+and for parallel,
+```
+mpirun -np 1 ./EVP 10000
 ```
 
 ### Testing
