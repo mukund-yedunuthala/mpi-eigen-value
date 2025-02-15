@@ -99,7 +99,7 @@ Vectors parallelPowerIterations(Matrix& P, int &rank, int& commSize, unsigned in
         for (unsigned int i = 0; i < rowsToSend; i++) {
             qk_i[i] = 0;
             for (unsigned int j = 0; j < size; j++) {
-                qk_i[i] += (recvBuffer[i*size+j]*rk_i[j]);
+                qk_i[i] += (recvBuffer[i*size+j]*rk.getDataAtIndex(j));
             }
         }
         // Local sum
@@ -107,7 +107,6 @@ Vectors parallelPowerIterations(Matrix& P, int &rank, int& commSize, unsigned in
         for (int i = 0; i<rowsToSend; i++) {
             qk_i_sum += std::abs(qk_i[i]) ;
         }
-        MPI_Barrier(MPI_COMM_WORLD);
         double L1_qk{};
         MPI_Reduce(
             &qk_i_sum, &L1_qk, 1, 
@@ -125,13 +124,13 @@ Vectors parallelPowerIterations(Matrix& P, int &rank, int& commSize, unsigned in
         );
 
         rk1.setData(resBuffer);
-        double max_diff = 0;
+        double max_diff {};
         for (int i = 0; i<size; i++) {
             double diff = rk1.getDataAtIndex(i)- rk.getDataAtIndex(i);
             max_diff = std::max(max_diff,std::abs(diff));
         }
         std::cout << std::setprecision(6);
-        std::cout << "Iteration: " << it+1 << "\t Diff: " << max_diff << "\n";
+        if (rank==ROOT) std::cout << "Iteration: " << it+1 << "\t Diff: " << max_diff << "\n";
         if (max_diff < tol) {
             break;
         }
