@@ -69,16 +69,17 @@ void Vectors::setData(double*& inputData) {
 }
 
 /**
- * \brief Sets all elements of the vector to a given value.
- * \param value The value to set all elements to.
+ * \brief Sets the value at a specific index.
+ * \param i The index where the value should be set.
+ * \param value The value to set.
  */
 void Vectors::setValueAtIndex(unsigned int i, double value) {
     data[i] = value;
 }
 
 /**
- * \brief Computes the sum of all elements in the vector.
- * \return The sum of vector elements.
+ * \brief Sets all elements of the vector to a given value.
+ * \param value The value to set all elements to.
  */
 void Vectors::setToValue(double value) {
     for (unsigned int i = 0; i < size; i++) {
